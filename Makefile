@@ -4,7 +4,7 @@ run:
 	bin/main
 
 build:
-	go build cmd/main.go -o bin/main
+	go build cmd/server/main.go 
 
 
 lint:
