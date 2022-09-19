@@ -3,30 +3,30 @@ package server
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/TovarischSuhov/go-synchronius-example/internal/api"
-	"github.com/TovarischSuhov/log"
 )
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		log.Warn("Not allowed method")
-		w.WriteHeader(http.StatusNotAllowed)
+	if r.Method != http.MethodPost {
+		log.Println("Not allowed method")
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Warn(err)
+		log.Println(err)
 	}
 	var msg api.Message
-	err := json.Unmarshal(body, &msg)
+	err = json.Unmarshal(body, &msg)
 	if err != nil {
-		log.Warn(err)
+		log.Println(err)
 	}
-	time.Sleep(msg.Sleep * time.Second)
+	time.Sleep(time.Duration(msg.Sleep) * time.Second)
 	resp := api.Response{Message: msg.Message}
 	buf, err := json.Marshal(resp)
 	w.Write(buf)
